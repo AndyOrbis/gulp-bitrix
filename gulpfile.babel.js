@@ -22,13 +22,13 @@ const paths = {
 		dest: './' + base + '/'
 	},
 	images: {
-		src: './www/local/templates/*/images/**/*[^.min].+(png|gif|jpg|jpeg|svg)', //TODO почему не сжимает SVG?
+		src: './www/local/templates/*/images/**/*[^.min].+(png|gif|jpg|jpeg|svg)', //TODO почему сжимает не все SVG?
 		dest: './' + base + '/'
 	},
 };
 
-export function sassStyles() {
-	return gulp.src(paths.styles.src, {since: gulp.lastRun(sassStyles), base: base})
+export function styles() {
+	return gulp.src(paths.styles.src, {since: gulp.lastRun(styles), base: base})
 		.pipe(sourcemaps.init())
 		.pipe(sass().on('error', sass.logError))
 		.pipe(cleanCSS()) //TODO можно задать настройки по необходимым браузерам
@@ -63,16 +63,16 @@ export function images() {
 
 export function watch() {
 	gulp.watch(paths.scripts.src, scripts);
-	gulp.watch(paths.styles.src, sassStyles);
+	gulp.watch(paths.styles.src, styles);
 	gulp.watch(paths.images.src, images);
 }
 
-/*exports.sassStyles = sassStyles;
+/*exports.styles = styles;
 exports.scripts = scripts;
 exports.watch = watch;*/
 
 //var build = gulp.series(clean, gulp.parallel(scss, js));
-const build = gulp.parallel(sassStyles, scripts, images);
+const build = gulp.parallel(styles, scripts, images);
 
 //gulp.task('default', ['scss', 'js']);
 gulp.task('build', build);
