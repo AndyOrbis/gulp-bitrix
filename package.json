@@ -9,8 +9,15 @@
   "author": "andy.orbis@gmail.com",
   "license": "ISC",
   "devDependencies": {
-    "gulp": "^3.9.1",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "gulp": "^4.0.0",
+    "gulp-babel": "^7.0.1",
+    "gulp-clean-css": "^3.9.4",
     "gulp-rename": "^1.2.3",
-    "gulp-sourcemaps": "^2.6.4"
+    "gulp-sass": "^4.0.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.0"
   }
 }
