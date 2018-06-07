@@ -1,6 +1,6 @@
 //TODO кэширование, чтобы пересобирались не все файлы, а только измененные
-//TODO watch for files
 //TODO add CSS task
+
 import gulp from 'gulp';
 import rename from 'gulp-rename';
 import sass from 'gulp-sass';

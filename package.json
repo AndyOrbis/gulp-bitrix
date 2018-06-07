@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
+    "watch": "gulp watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "andy.orbis@gmail.com",
