@@ -1,7 +1,7 @@
 //TODO кэширование, чтобы пересобирались не все файлы, а только измененные
 //TODO watch for files
 //TODO add CSS task
-var gulp = require('gulp');
+import gulp from 'gulp';
 var rename = require("gulp-rename");
 var sass = require('gulp-sass');
 var babel = require('gulp-babel');
