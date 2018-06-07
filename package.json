@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "watch": "gulp watch",
+    "gulp": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "andy.orbis@gmail.com",
@@ -17,6 +18,7 @@
     "gulp": "^4.0.0",
     "gulp-babel": "^7.0.1",
     "gulp-clean-css": "^3.9.4",
+    "gulp-imagemin": "^4.1.0",
     "gulp-rename": "^1.2.3",
     "gulp-sass": "^4.0.1",
     "gulp-sourcemaps": "^2.6.4",
