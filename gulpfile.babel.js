@@ -2,15 +2,15 @@
 //TODO watch for files
 //TODO add CSS task
 import gulp from 'gulp';
-var rename = require("gulp-rename");
-var sass = require('gulp-sass');
-var babel = require('gulp-babel');
-var uglify = require('gulp-uglify');
-var cleanCSS = require('gulp-clean-css');
-var sourcemaps = require('gulp-sourcemaps'); //TODO промежуточный sourcemap на sass, а не на css после обработки sass()
+import rename from 'gulp-rename';
+import sass from 'gulp-sass';
+import babel from 'gulp-babel';
+import uglify from 'gulp-uglify';
+import cleanCSS from 'gulp-clean-css';
+import sourcemaps from 'gulp-sourcemaps'; //TODO промежуточный sourcemap на sass, а не на css после обработки sass()
 
-var base = 'www';
-var paths = {
+const base = 'www';
+const paths = {
 	styles: {
 		src: ['./www/local/templates/*/css/**/*.scss',
 		      './www/local/templates/*/components/**/*.scss'
@@ -25,7 +25,7 @@ var paths = {
 	}
 };
 
-function sassStyles() {
+export function sassStyles() {
 	return gulp.src(paths.styles.src, {base: base})
 		.pipe(sourcemaps.init())
 		.pipe(sass().on('error', sass.logError))
@@ -38,7 +38,7 @@ function sassStyles() {
 		.pipe(gulp.dest(paths.styles.dest))
 }
 
-function scripts() {
+export function scripts() {
 	return gulp.src(paths.scripts.src, {base: base})
 		.pipe(sourcemaps.init())
 		.pipe(rename({
@@ -50,17 +50,18 @@ function scripts() {
 		.pipe(gulp.dest(paths.scripts.dest))
 }
 
-function watch() {
+export function watch() {
 	gulp.watch(paths.scripts.src, scripts);
 	gulp.watch(paths.styles.src, sassStyles);
 }
 
-exports.sassStyles = sassStyles;
+/*exports.sassStyles = sassStyles;
 exports.scripts = scripts;
-exports.watch = watch;
+exports.watch = watch;*/
 
 //var build = gulp.series(clean, gulp.parallel(scss, js));
-var build = gulp.parallel(sassStyles, scripts);
+const build = gulp.parallel(sassStyles, scripts);
 
 //gulp.task('default', ['scss', 'js']);
-gulp.task('default', build);
+gulp.task('build', build);
+export default build;

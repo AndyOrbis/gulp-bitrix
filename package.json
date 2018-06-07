@@ -4,7 +4,6 @@
   "description": "",
   "private": true,
   "scripts": {
-    "start": "nodemon src/app.js --exec babel-node --presets babel-preset-env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "andy.orbis@gmail.com",
@@ -20,7 +19,6 @@
     "gulp-rename": "^1.2.3",
     "gulp-sass": "^4.0.1",
     "gulp-sourcemaps": "^2.6.4",
-    "gulp-uglify": "^3.0.0",
-    "nodemon": "^1.17.5"
+    "gulp-uglify": "^3.0.0"
   }
 }
