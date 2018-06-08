@@ -1,6 +1,6 @@
 //TODO наблюдать за новыми папками
-//FIXME из-за cache одинаковых файлов в разных папках каждый уникальный файл отрабатывает только в одной папке, куда его первый раз закинем
 //TODO should we use pump?
+//TODO проверить, что все пути на sass/css/js в браузерах показывают полностью правильно
 
 import gulp from 'gulp';
 import rename from 'gulp-rename';
@@ -10,6 +10,7 @@ import uglify from 'gulp-uglify'; // минифицирование JS
 import cleanCSS from 'gulp-clean-css'; // минифицирование и расстановка префиксов в CSS
 import sourcemaps from 'gulp-sourcemaps'; //TODO промежуточный sourcemap на sass, а не на css после обработки sass()
 import imagemin from 'gulp-imagemin'; // минифицирование JPG, GIF, PNG, SVG
+import changed from 'gulp-changed'; // кеширование для gulp, в т.ч. между запусками, а не только внутри сессии watch
 
 const base = 'www';
 const paths = {
@@ -34,24 +35,26 @@ const paths = {
 };
 
 export function styles() {
-	return gulp.src(paths.styles.src, {dot: true, since: gulp.lastRun(styles), base: base})
-		.pipe(sourcemaps.init())
-		.pipe(sass().on('error', sass.logError))
-		.pipe(cleanCSS()) //TODO можно задать настройки по необходимым браузерам
+	return gulp.src(paths.styles.src, {dot: true, base: base})
 		.pipe(rename({
 			suffix: ".min",
 			extname: ".css"
 		}))
+		.pipe(changed(paths.styles.dest)) // ниже можно вставить в стрим remember(), чтобы забрать из кеша и неизмененные файлы
+		.pipe(sourcemaps.init())
+		.pipe(sass().on('error', sass.logError))
+		.pipe(cleanCSS()) //TODO можно задать настройки по необходимым браузерам
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest(paths.styles.dest))
 }
 
 export function scripts() {
-	return gulp.src(paths.scripts.src, {dot: true, since: gulp.lastRun(scripts), base: base})
-		.pipe(sourcemaps.init())
+	return gulp.src(paths.scripts.src, {dot: true, base: base})
 		.pipe(rename({
 			suffix: ".min"
 		}))
+		.pipe(changed(paths.scripts.dest))
+		.pipe(sourcemaps.init())
 		.pipe(babel())
 		.pipe(uglify())
 		.pipe(sourcemaps.write('./'))
@@ -59,11 +62,12 @@ export function scripts() {
 }
 
 export function images() {
-	return gulp.src(paths.images.src, {dot: true, since: gulp.lastRun(images), base: base})
-		.pipe(imagemin())
+	return gulp.src(paths.images.src, {dot: true, base: base})
 		.pipe(rename({
 			suffix: ".min"
 		}))
+		.pipe(changed(paths.images.dest))
+		.pipe(imagemin())
 		.pipe(gulp.dest(paths.images.dest))
 }
 
@@ -73,13 +77,6 @@ export function watch() {
 	gulp.watch(paths.images.src, images);
 }
 
-/*exports.styles = styles;
-exports.scripts = scripts;
-exports.watch = watch;*/
-
-//var build = gulp.series(clean, gulp.parallel(scss, js));
 const build = gulp.series(gulp.parallel(styles, scripts, images), watch);
-
-//gulp.task('default', ['scss', 'js']);
-gulp.task('build', build);
+//gulp.task('build', build);
 export default build;
