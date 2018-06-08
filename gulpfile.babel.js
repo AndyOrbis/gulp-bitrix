@@ -1,6 +1,5 @@
-//TODO наблюдать за новыми папками
-//TODO should we use pump?
-//TODO проверить, что все пути на sass/css/js в браузерах показывают полностью правильно
+//FIXME не работает обработки .default папок
+//TODO webp сжатие картинок в нужные разрешения и в webp по глобальной команде из консоли
 
 import gulp from 'gulp';
 import rename from 'gulp-rename';
@@ -11,6 +10,7 @@ import cleanCSS from 'gulp-clean-css'; // минифицирование и ра
 import sourcemaps from 'gulp-sourcemaps'; //TODO промежуточный sourcemap на sass, а не на css после обработки sass()
 import imagemin from 'gulp-imagemin'; // минифицирование JPG, GIF, PNG, SVG
 import changed from 'gulp-changed'; // кеширование для gulp, в т.ч. между запусками, а не только внутри сессии watch
+import path from 'path';
 
 const base = 'www';
 const paths = {
@@ -35,28 +35,39 @@ const paths = {
 };
 
 export function styles() {
+	let oldExtension;
+
 	return gulp.src(paths.styles.src, {dot: true, base: base})
-		.pipe(rename({
-			suffix: ".min",
-			extname: ".css"
+		.pipe(rename(function (path) {
+			oldExtension = path.extname;
+			path.basename += ".min";
+			path.extname = ".css";
 		}))
-		.pipe(changed(paths.styles.dest)) // ниже можно вставить в стрим remember(), чтобы забрать из кеша и неизмененные файлы
 		.pipe(sourcemaps.init())
+		.pipe(changed(paths.styles.dest)) // ниже можно вставить в стрим remember(), чтобы забрать из кеша и неизмененные файлы
 		.pipe(sass().on('error', sass.logError))
 		.pipe(cleanCSS()) //TODO можно задать настройки по необходимым браузерам
+		.pipe(sourcemaps.mapSources(function(sourcePath, file) {
+			sourcePath = path.basename(sourcePath, '.min.css') + oldExtension;
+			return sourcePath;
+		}))
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest(paths.styles.dest))
 }
 
 export function scripts() {
 	return gulp.src(paths.scripts.src, {dot: true, base: base})
+		.pipe(sourcemaps.init())
 		.pipe(rename({
 			suffix: ".min"
 		}))
 		.pipe(changed(paths.scripts.dest))
-		.pipe(sourcemaps.init())
 		.pipe(babel())
 		.pipe(uglify())
+		.pipe(sourcemaps.mapSources(function(sourcePath, file) {
+			sourcePath = path.basename(sourcePath, '.min.js') + '.js';
+			return sourcePath;
+		}))
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest(paths.scripts.dest))
 }
