@@ -4,12 +4,12 @@
 
 import gulp from 'gulp';
 import rename from 'gulp-rename';
-import sass from 'gulp-sass';
-import babel from 'gulp-babel';
-import uglify from 'gulp-uglify';
-import cleanCSS from 'gulp-clean-css';
+import sass from 'gulp-sass'; // поддержка SASS (scss)
+import babel from 'gulp-babel'; // поддержка ES6 и новых стандартов
+import uglify from 'gulp-uglify'; // минифицирование JS
+import cleanCSS from 'gulp-clean-css'; // минифицирование и расстановка префиксов в CSS
 import sourcemaps from 'gulp-sourcemaps'; //TODO промежуточный sourcemap на sass, а не на css после обработки sass()
-import imagemin from 'gulp-imagemin';
+import imagemin from 'gulp-imagemin'; // минифицирование JPG, GIF, PNG, SVG
 
 const base = 'www';
 const paths = {
