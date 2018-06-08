@@ -1,3 +1,7 @@
+//TODO наблюдать за новыми папками
+//FIXME из-за cache одинаковых файлов в разных папках каждый уникальный файл отрабатывает только в одной папке, куда его первый раз закинем
+//TODO should we use pump?
+
 import gulp from 'gulp';
 import rename from 'gulp-rename';
 import sass from 'gulp-sass';
@@ -10,25 +14,27 @@ import imagemin from 'gulp-imagemin';
 const base = 'www';
 const paths = {
 	styles: {
-		src: ['./www/local/templates/*/css/**/*[^.min].?(s)css',
-		      './www/local/templates/*/components/**/*[^.min].?(s)css'
+		src: ['./www/local/templates/*/css/**/!(*.min).?(s)css',
+		      './www/local/templates/*/components/**/!(*.min).?(s)css'
 		],
 		dest: './' + base + '/'
 	},
 	scripts: {
-		src: ['./www/local/templates/*/js/**/*[^.min].js',
-		      './www/local/templates/*/components/**/*[^.min].js'
+		src: ['./www/local/templates/*/js/**/!(*.min).js',
+		      './www/local/templates/*/components/**/!(*.min).js'
 		],
 		dest: './' + base + '/'
 	},
 	images: {
-		src: './www/local/templates/*/images/**/*[^.min].+(png|gif|jpg|jpeg|svg)', //TODO почему сжимает не все SVG?
+		src: ['./www/local/templates/*/images/**/!(*.min).+(png|gif|jpg|jpeg|svg)',
+		      './www/local/templates/*/components/**/images/**/!(*.min).+(png|gif|jpg|jpeg|svg)'
+		],
 		dest: './' + base + '/'
 	},
 };
 
 export function styles() {
-	return gulp.src(paths.styles.src, {since: gulp.lastRun(styles), base: base})
+	return gulp.src(paths.styles.src, {dot: true, since: gulp.lastRun(styles), base: base})
 		.pipe(sourcemaps.init())
 		.pipe(sass().on('error', sass.logError))
 		.pipe(cleanCSS()) //TODO можно задать настройки по необходимым браузерам
@@ -41,7 +47,7 @@ export function styles() {
 }
 
 export function scripts() {
-	return gulp.src(paths.scripts.src, {since: gulp.lastRun(scripts), base: base})
+	return gulp.src(paths.scripts.src, {dot: true, since: gulp.lastRun(scripts), base: base})
 		.pipe(sourcemaps.init())
 		.pipe(rename({
 			suffix: ".min"
@@ -53,7 +59,7 @@ export function scripts() {
 }
 
 export function images() {
-	return gulp.src(paths.images.src, {since: gulp.lastRun(images), base: base})
+	return gulp.src(paths.images.src, {dot: true, since: gulp.lastRun(images), base: base})
 		.pipe(imagemin())
 		.pipe(rename({
 			suffix: ".min"
@@ -72,7 +78,7 @@ exports.scripts = scripts;
 exports.watch = watch;*/
 
 //var build = gulp.series(clean, gulp.parallel(scss, js));
-const build = gulp.parallel(styles, scripts, images);
+const build = gulp.series(gulp.parallel(styles, scripts, images), watch);
 
 //gulp.task('default', ['scss', 'js']);
 gulp.task('build', build);
