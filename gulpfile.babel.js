@@ -1,4 +1,3 @@
-//FIXME не работает обработки .default папок
 //TODO webp сжатие картинок в нужные разрешения и в webp по глобальной команде из консоли
 
 import gulp from 'gulp';
@@ -14,22 +13,42 @@ import path from 'path';
 import autoprefixer from 'gulp-autoprefixer'; // авторасстановка префиксов
 
 const base = 'www';
+// Дополнительные пути с точкой в начале названий шаблонов прописаны для gulp.watch (он использует chokidar для поиска glob),
+// т.к. он не следит за папками с точками без явного указания, в отличие от gulp.src(использует micromatch, в которую передаем опцию dot: true)
 const paths = {
 	styles: {
-		src: ['./www/local/templates/*/css/**/!(*.min).?(s)css',
-		      './www/local/templates/*/components/**/!(*.min).?(s)css'
+		src: [
+			'./www/local/templates/*/css/**/!(*.min).?(s)css',
+			'./www/local/templates/.*/css/**/!(*.min).?(s)css',
+
+		    './www/local/templates/*/components/**/!(*.min).?(s)css',
+		    './www/local/templates/*/components/**/.*/!(*.min).?(s)css',
+		    './www/local/templates/.*/components/**/!(*.min).?(s)css',
+		    './www/local/templates/.*/components/**/.*/!(*.min).?(s)css',
 		],
 		dest: './' + base + '/'
 	},
 	scripts: {
-		src: ['./www/local/templates/*/js/**/!(*.min).js',
-		      './www/local/templates/*/components/**/!(*.min).js'
+		src: [
+			'./www/local/templates/*/js/**/!(*.min).js',
+			'./www/local/templates/.*/js/**/!(*.min).js',
+
+		    './www/local/templates/*/components/**/!(*.min).js',
+		    './www/local/templates/*/components/**/.*/!(*.min).js',
+		    './www/local/templates/.*/components/**/!(*.min).js',
+		    './www/local/templates/.*/components/**/.*/!(*.min).js',
 		],
 		dest: './' + base + '/'
 	},
 	images: {
-		src: ['./www/local/templates/*/images/**/!(*.min).+(png|gif|jpg|jpeg|svg)',
-		      './www/local/templates/*/components/**/images/**/!(*.min).+(png|gif|jpg|jpeg|svg)'
+		src: [
+			'./www/local/templates/*/images/**/!(*.min).+(png|gif|jpg|jpeg|svg)',
+			'./www/local/templates/.*/images/**/!(*.min).+(png|gif|jpg|jpeg|svg)',
+
+		    './www/local/templates/*/components/**/images/**/!(*.min).+(png|gif|jpg|jpeg|svg)',
+		    './www/local/templates/*/components/**/.*/images/**/!(*.min).+(png|gif|jpg|jpeg|svg)',
+		    './www/local/templates/.*/components/**/images/**/!(*.min).+(png|gif|jpg|jpeg|svg)',
+		    './www/local/templates/.*/components/**/.*/images/**/!(*.min).+(png|gif|jpg|jpeg|svg)',
 		],
 		dest: './' + base + '/'
 	},
