@@ -6,11 +6,12 @@ import rename from 'gulp-rename';
 import sass from 'gulp-sass'; // поддержка SASS (scss)
 import babel from 'gulp-babel'; // поддержка ES6 и новых стандартов
 import uglify from 'gulp-uglify'; // минифицирование JS
-import cleanCSS from 'gulp-clean-css'; // минифицирование и расстановка префиксов в CSS
-import sourcemaps from 'gulp-sourcemaps'; //TODO промежуточный sourcemap на sass, а не на css после обработки sass()
+import cleanCSS from 'gulp-clean-css'; // минифицирование CSS
+import sourcemaps from 'gulp-sourcemaps';
 import imagemin from 'gulp-imagemin'; // минифицирование JPG, GIF, PNG, SVG
 import changed from 'gulp-changed'; // кеширование для gulp, в т.ч. между запусками, а не только внутри сессии watch
 import path from 'path';
+import autoprefixer from 'gulp-autoprefixer'; // авторасстановка префиксов
 
 const base = 'www';
 const paths = {
@@ -46,7 +47,8 @@ export function styles() {
 		.pipe(sourcemaps.init())
 		.pipe(changed(paths.styles.dest)) // ниже можно вставить в стрим remember(), чтобы забрать из кеша и неизмененные файлы
 		.pipe(sass().on('error', sass.logError))
-		.pipe(cleanCSS()) //TODO можно задать настройки по необходимым браузерам
+		.pipe(autoprefixer())
+		.pipe(cleanCSS())
 		.pipe(sourcemaps.mapSources(function(sourcePath, file) {
 			sourcePath = path.basename(sourcePath, '.min.css') + oldExtension;
 			return sourcePath;
