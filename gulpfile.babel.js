@@ -1,5 +1,3 @@
-//TODO webp сжатие картинок в нужные разрешения и в webp по глобальной команде из консоли
-
 import gulp from 'gulp';
 import rename from 'gulp-rename';
 import sass from 'gulp-sass'; // поддержка SASS (scss)
